@@ -4,10 +4,12 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/samuelorlato/football-api/internal/application/services"
 	"github.com/samuelorlato/football-api/internal/application/usecases"
+	"github.com/samuelorlato/football-api/internal/infra/databases"
 	"github.com/samuelorlato/football-api/internal/infra/repositories"
 	"github.com/samuelorlato/football-api/internal/infra/server/router"
 	"github.com/samuelorlato/football-api/internal/integration/entrypoint/controllers"
 	"github.com/samuelorlato/football-api/internal/integration/entrypoint/validators"
+	"github.com/samuelorlato/football-api/internal/integration/persistance/models"
 )
 
 type injector struct {
@@ -15,7 +17,9 @@ type injector struct {
 }
 
 func Injector() *injector {
-	userRepository := repositories.NewUserRepository()
+	db := databases.NewPostgresConnection()
+	db.AutoMigrate(&models.User{})
+	userRepository := repositories.NewGormUserRepository(db)
 	encryptionService := services.NewBcryptService()
 	registerUsecase := usecases.NewRegisterUsecase(userRepository, encryptionService)
 	tokenService := services.NewJWTService()

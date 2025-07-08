@@ -11,7 +11,6 @@ func (r *RegisterRequest) ToUserEntity(registerRequest RegisterRequest, ID strin
 		ID:           ID,
 		Name:         registerRequest.Name,
 		Email:        registerRequest.Email,
-		Password:     registerRequest.Password,
 		PasswordHash: passwordHash,
 	}
 }
