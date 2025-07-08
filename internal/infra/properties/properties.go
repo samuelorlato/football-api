@@ -8,7 +8,8 @@ type properties struct {
 }
 
 type application struct {
-	Port string
+	Port      string
+	JWTSecret string
 }
 
 type database struct {
@@ -22,7 +23,8 @@ type database struct {
 func Properties() *properties {
 	return &properties{
 		Application: &application{
-			Port: os.Getenv("SERVER_PORT"),
+			Port:      os.Getenv("APP_PORT"),
+			JWTSecret: os.Getenv("JWT_SECRET"),
 		},
 		Database: &database{
 			Host:     os.Getenv("DB_HOST"),
