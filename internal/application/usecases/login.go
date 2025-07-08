@@ -33,7 +33,7 @@ func (l *loginUsecase) Execute(username, password string) (*entities.Token, erro
 		return nil, errs.NewNotFoundError("usuário não encontrado")
 	}
 
-	err = l.encryptionService.CompareHashAndPassword(user.Password, password)
+	err = l.encryptionService.CompareHashAndPassword(user.PasswordHash, password)
 	if err != nil {
 		return nil, errs.NewBadRequestError("senha incorreta")
 	}
