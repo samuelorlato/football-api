@@ -26,7 +26,7 @@ func (r *registerUsecase) Execute(registerRequest entities.RegisterRequest) erro
 		return errs.NewInternalServerError()
 	}
 	if user != nil {
-		return errs.NewUnprocessableContentError("usuário ja cadastrado")
+		return errs.NewUnprocessableContentError("usuário já cadastrado")
 	}
 
 	userID := uuid.NewString()

@@ -3,7 +3,7 @@ package dtos
 import "github.com/samuelorlato/football-api/internal/domain/entities"
 
 type RegisterRequest struct {
-	Name     string `json:"usuario" validate:"required"`
+	Name     string `json:"usuário" validate:"required"`
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"senha" validate:"required"`
 }
