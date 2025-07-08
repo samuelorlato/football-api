@@ -5,13 +5,13 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type encryptionService struct{}
+type bcryptService struct{}
 
-func NewEncryptionService() ports.EncryptionService {
-	return &encryptionService{}
+func NewBcryptService() ports.EncryptionService {
+	return &bcryptService{}
 }
 
-func (e *encryptionService) HashPassword(password string) (*string, error) {
+func (e *bcryptService) HashPassword(password string) (*string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
@@ -22,6 +22,6 @@ func (e *encryptionService) HashPassword(password string) (*string, error) {
 	return &hashedPasswordString, nil
 }
 
-func (e *encryptionService) CompareHashAndPassword(hashedPassword, password string) error {
+func (e *bcryptService) CompareHashAndPassword(hashedPassword, password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
