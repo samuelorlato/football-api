@@ -1,12 +1,13 @@
 package usecases
 
 import (
-	"os"
 	"time"
 
 	"github.com/samuelorlato/football-api/internal/application/ports"
 	"github.com/samuelorlato/football-api/internal/domain/entities"
 	ports2 "github.com/samuelorlato/football-api/internal/domain/ports/repositories"
+	"github.com/samuelorlato/football-api/internal/infra/properties"
+	"github.com/samuelorlato/football-api/pkg/errs"
 )
 
 type loginUsecase struct {
@@ -26,23 +27,22 @@ func NewLoginUsecase(userRepository ports2.UserRepository, encryptionService por
 func (l *loginUsecase) Execute(username, password string) (*entities.Token, error) {
 	user, err := l.userRepository.FindByUsername(username)
 	if err != nil {
-		// TODO: create custom error
-		return nil, err
+		return nil, errs.NewInternalServerError()
+	}
+	if user == nil {
+		return nil, errs.NewNotFoundError("usuário não encontrado")
 	}
 
 	err = l.encryptionService.CompareHashAndPassword(user.Password, password)
 	if err != nil {
-		// TODO: create custom error
-		return nil, err
+		return nil, errs.NewBadRequestError("senha incorreta")
 	}
 
 	tokenExpirationTime := time.Now().Add(time.Hour * 24)
-	// TODO: create secret
-	tokenSecret := os.Getenv("JWT_SECRET")
+	tokenSecret := properties.Properties().Application.JWTSecret
 	tokenString, err := l.tokenService.GenerateToken(user.ID, &tokenExpirationTime, tokenSecret)
 	if err != nil {
-		// TODO: create custom error
-		return nil, err
+		return nil, errs.NewInternalServerError()
 	}
 
 	token := &entities.Token{

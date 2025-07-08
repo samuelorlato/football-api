@@ -11,7 +11,7 @@ type authorizationController struct {
 	loginUsecase    ports2.LoginUsecase
 }
 
-func AuthorizationController(registerUsecase ports2.RegisterUsecase, loginUsecase ports2.LoginUsecase) ports.AuthorizationController {
+func NewAuthorizationController(registerUsecase ports2.RegisterUsecase, loginUsecase ports2.LoginUsecase) ports.AuthorizationController {
 	return &authorizationController{
 		registerUsecase,
 		loginUsecase,

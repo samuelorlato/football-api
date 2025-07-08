@@ -5,6 +5,7 @@ import (
 	"github.com/samuelorlato/football-api/internal/application/ports"
 	"github.com/samuelorlato/football-api/internal/domain/entities"
 	ports2 "github.com/samuelorlato/football-api/internal/domain/ports/repositories"
+	"github.com/samuelorlato/football-api/pkg/errs"
 )
 
 type registerUsecase struct {
@@ -22,26 +23,22 @@ func NewRegisterUsecase(userRepository ports2.UserRepository, encryptionService 
 func (r *registerUsecase) Execute(registerRequest entities.RegisterRequest) error {
 	user, err := r.userRepository.FindByUsername(registerRequest.Name)
 	if err != nil {
-		// TODO: create custom error
-		return err
+		return errs.NewInternalServerError()
 	}
 	if user != nil {
-		// TODO: create custom error (UsernameAlreadyExistsError)
-		return nil
+		return errs.NewUnprocessableContentError("usuário ja cadastrado")
 	}
 
 	userID := uuid.NewString()
 
 	hashedPassword, err := r.encryptionService.HashPassword(registerRequest.Password)
 	if err != nil {
-		// TODO: create custom error
-		return err
+		return errs.NewInternalServerError()
 	}
 
 	err = r.userRepository.Save(registerRequest.ToUserEntity(registerRequest, userID, *hashedPassword))
 	if err != nil {
-		// TODO: create custom error
-		return err
+		return errs.NewInternalServerError()
 	}
 
 	return nil
