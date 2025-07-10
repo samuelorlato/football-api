@@ -5,6 +5,7 @@ import "os"
 type properties struct {
 	Application *application
 	Database    *database
+	FootballAPI *footballAPI
 }
 
 type application struct {
@@ -20,6 +21,11 @@ type database struct {
 	Name     string
 }
 
+type footballAPI struct {
+	BaseURL string
+	Token   string
+}
+
 func Properties() *properties {
 	return &properties{
 		Application: &application{
@@ -32,6 +38,10 @@ func Properties() *properties {
 			User:     os.Getenv("DB_USER"),
 			Password: os.Getenv("DB_PASSWORD"),
 			Name:     os.Getenv("DB_NAME"),
+		},
+		FootballAPI: &footballAPI{
+			BaseURL: os.Getenv("FOOTBALL_API_BASE_URL"),
+			Token:   os.Getenv("FOOTBALL_API_TOKEN"),
 		},
 	}
 }
