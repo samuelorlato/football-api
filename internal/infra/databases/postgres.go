@@ -2,6 +2,7 @@ package databases
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/samuelorlato/football-api/internal/infra/properties"
 	"gorm.io/driver/postgres"
@@ -18,7 +19,18 @@ func NewPostgresConnection() *gorm.DB {
 		properties.Properties().Database.Port,
 	)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	var db *gorm.DB
+	var err error
+
+	for i := range 10 {
+		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+		if err == nil {
+			break
+		}
+		fmt.Printf("retry %d to connect to database", i+1)
+		time.Sleep(3 * time.Second)
+	}
+
 	if err != nil {
 		panic(err)
 	}
