@@ -22,6 +22,9 @@ func (g *getFanByEmailUsecase) Execute(email string) (*entities.Fan, error) {
 	if err != nil {
 		return nil, errs.NewInternalServerError()
 	}
+	if fan == nil {
+		return nil, errs.NewNotFoundError("torcedor não encontrado")
+	}
 
 	return fan, nil
 }
