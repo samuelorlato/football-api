@@ -28,19 +28,21 @@ func (f *footballController) GetMatches(leagueCode string, team *string, matchda
 
 	matches := make([]dtos.Match, len(matchesEntities))
 	for i, matchEntity := range matchesEntities {
-		score := fmt.Sprintf("%dx%d", matchEntity.HomeScore, matchEntity.AwayScore)
-		matches[i] = dtos.NewMatch(matchEntity, score)
+		var score string
+		if matchEntity.HomeScore != nil && matchEntity.AwayScore != nil {
+			score = fmt.Sprintf("%dx%d", *matchEntity.HomeScore, *matchEntity.AwayScore)
+		}
+		matches[i] = dtos.NewMatch(matchEntity, &score)
 	}
 
 	if matchday != nil {
 		return &dtos.Matches{
-			Matchday: *matchday,
+			Matchday: matchday,
 			Matches:  matches,
 		}, nil
 	}
 
-	// TODO: review business rules
-	return nil, nil
+	return &dtos.Matches{Matches: matches}, nil
 }
 
 func (f *footballController) GetLeagues() ([]dtos.League, error) {

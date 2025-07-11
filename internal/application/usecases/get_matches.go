@@ -18,17 +18,15 @@ func NewGetMatchesUsecase(footballAPI ports.FootballAPI) ports2.GetMatchesUseCas
 }
 
 func (g *getMatchesUsecase) Execute(leagueCode string, team *string, matchday *int) ([]entities.Match, error) {
-	// TODO: review business rules
-
 	var matches []entities.Match
 	var err error
 	if matchday != nil {
-		matches, err = g.footballAPI.GetMatchdayFinishedMatches(leagueCode, *matchday)
+		matches, err = g.footballAPI.GetMatchdayMatches(leagueCode, *matchday)
 		if err != nil {
 			return nil, errs.NewInternalServerError()
 		}
 	} else {
-		matches, err = g.footballAPI.GetFinishedMatches(leagueCode)
+		matches, err = g.footballAPI.GetMatches(leagueCode)
 		if err != nil {
 			return nil, errs.NewInternalServerError()
 		}

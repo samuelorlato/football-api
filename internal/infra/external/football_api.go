@@ -51,8 +51,8 @@ func (f *footballAPI) doRequestAndReadBody(method string, URL string, target int
 	return nil
 }
 
-func (f *footballAPI) GetFinishedMatches(leagueCode string) ([]entities.Match, error) {
-	url := fmt.Sprintf("%s/competitions/%s/matches?status=FINISHED", f.baseURL, leagueCode)
+func (f *footballAPI) GetMatches(leagueCode string) ([]entities.Match, error) {
+	url := fmt.Sprintf("%s/competitions/%s/matches", f.baseURL, leagueCode)
 	var matchesRes dtos.MatchesResponse
 	err := f.doRequestAndReadBody("GET", url, &matchesRes)
 	if err != nil {
@@ -64,8 +64,8 @@ func (f *footballAPI) GetFinishedMatches(leagueCode string) ([]entities.Match, e
 	return matches, nil
 }
 
-func (f *footballAPI) GetMatchdayFinishedMatches(leagueCode string, matchday int) ([]entities.Match, error) {
-	url := fmt.Sprintf("%s/competitions/%s/matches?matchday=%d&status=FINISHED", f.baseURL, leagueCode, matchday)
+func (f *footballAPI) GetMatchdayMatches(leagueCode string, matchday int) ([]entities.Match, error) {
+	url := fmt.Sprintf("%s/competitions/%s/matches?matchday=%d", f.baseURL, leagueCode, matchday)
 	var matchesRes dtos.MatchesResponse
 	err := f.doRequestAndReadBody("GET", url, &matchesRes)
 	if err != nil {
