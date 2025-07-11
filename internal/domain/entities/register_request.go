@@ -4,6 +4,7 @@ type RegisterRequest struct {
 	Name     string
 	Email    string
 	Password string
+	Role     string
 }
 
 func (r *RegisterRequest) ToUserEntity(registerRequest RegisterRequest, ID string, passwordHash string) User {
@@ -12,5 +13,6 @@ func (r *RegisterRequest) ToUserEntity(registerRequest RegisterRequest, ID strin
 		Name:         registerRequest.Name,
 		Email:        registerRequest.Email,
 		PasswordHash: passwordHash,
+		Role:         registerRequest.Role,
 	}
 }

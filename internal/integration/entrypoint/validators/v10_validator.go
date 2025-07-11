@@ -63,6 +63,9 @@ func validationErrorMessage(field string, e validator.FieldError) string {
 		return fmt.Sprintf("o campo %s é obrigatório", field)
 	case "email":
 		return fmt.Sprintf("o campo %s deve ser um email válido", field)
+	case "oneof":
+		values := strings.ReplaceAll(e.Param(), " ", ", ")
+		return fmt.Sprintf("o campo %s deve ser um dos seguintes valores: %s", field, values)
 	default:
 		return fmt.Sprintf("o campo %s é inválido", field)
 	}

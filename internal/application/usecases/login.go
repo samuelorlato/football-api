@@ -40,7 +40,7 @@ func (l *loginUsecase) Execute(username, password string) (*entities.Token, erro
 
 	tokenExpirationTime := time.Now().Add(time.Hour * 24)
 	tokenSecret := properties.Properties().Application.JWTSecret
-	tokenString, err := l.tokenService.GenerateToken(user.ID, &tokenExpirationTime, tokenSecret)
+	tokenString, err := l.tokenService.GenerateToken(user.ID, user.Name, user.Email, user.Role, &tokenExpirationTime, tokenSecret)
 	if err != nil {
 		return nil, errs.NewInternalServerError()
 	}

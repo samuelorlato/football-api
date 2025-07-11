@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/samuelorlato/football-api/internal/application/dtos"
 	"github.com/samuelorlato/football-api/internal/application/ports"
 	"github.com/samuelorlato/football-api/pkg/errs"
 )
@@ -14,14 +15,12 @@ func NewJWTService() ports.TokenService {
 	return &JWTService{}
 }
 
-type claim struct {
-	userID string
-	*jwt.RegisteredClaims
-}
-
-func (j *JWTService) GenerateToken(userID string, expiresAt *time.Time, secret string) (*string, error) {
-	claims := claim{
-		userID:           userID,
+func (j *JWTService) GenerateToken(userID, name, email, role string, expiresAt *time.Time, secret string) (*string, error) {
+	claims := dtos.JWTClaim{
+		UserID:           userID,
+		Name:             name,
+		Email:            email,
+		Role:             role,
 		RegisteredClaims: &jwt.RegisteredClaims{},
 	}
 
@@ -39,7 +38,7 @@ func (j *JWTService) GenerateToken(userID string, expiresAt *time.Time, secret s
 }
 
 func (j *JWTService) ValidateToken(tokenString string, secret string) error {
-	claims := &claim{}
+	claims := &dtos.JWTClaim{}
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(t *jwt.Token) (interface{}, error) {
 		return []byte(secret), nil

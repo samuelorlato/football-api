@@ -22,8 +22,9 @@ type injector struct {
 
 func Injector() *injector {
 	db := databases.NewPostgresConnection()
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{}, &models.Fan{})
 	userRepository := repositories.NewGormUserRepository(db)
+	fanRepository := repositories.NewGormFanRepository(db)
 
 	encryptionService := services.NewBcryptService()
 	tokenService := services.NewJWTService()
@@ -34,13 +35,17 @@ func Injector() *injector {
 	footballAPI := external.NewFootballAPI(&http.Client{}, properties.Properties().FootballAPI.BaseURL, properties.Properties().FootballAPI.Token)
 	getLeaguesUsecase := usecases.NewGetLeaguesUsecase(footballAPI)
 	getMatchesUsecase := usecases.NewGetMatchesUsecase(footballAPI)
+	subscribeUsecase := usecases.NewSubscribeUsecase(fanRepository)
+	getFanByEmailUsecase := usecases.NewGetFanByEmailUsecase(fanRepository)
 
 	authorizationController := controllers.NewAuthorizationController(registerUsecase, loginUsecase)
 	footballController := controllers.NewFootballController(getLeaguesUsecase, getMatchesUsecase)
+	broadcastController := controllers.NewBroadcastController(subscribeUsecase)
+	fanController := controllers.NewFanController(getFanByEmailUsecase)
 
 	v10Validator := validators.NewV10Validator()
 
-	app := router.New(footballController, authorizationController, v10Validator).Route()
+	app := router.New(fanController, broadcastController, footballController, authorizationController, v10Validator).Route()
 
 	return &injector{
 		App: app,

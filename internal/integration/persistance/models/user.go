@@ -11,6 +11,7 @@ type User struct {
 	Name         string `gorm:"unique;not null"`
 	Email        string `gorm:"unique;not null"`
 	PasswordHash string `gorm:"not null"`
+	Role         string `gorm:"not null"`
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 }
@@ -21,6 +22,7 @@ func (u *User) ToEntity() entities.User {
 		Name:         u.Name,
 		Email:        u.Email,
 		PasswordHash: u.PasswordHash,
+		Role:         u.Role,
 	}
 }
 
@@ -29,4 +31,5 @@ func (u *User) FromEntity(user entities.User) {
 	u.Name = user.Name
 	u.Email = user.Email
 	u.PasswordHash = user.PasswordHash
+	u.Role = user.Role
 }

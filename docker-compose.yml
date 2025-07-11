@@ -27,6 +27,11 @@ services:
       - "${DB_PORT}:5432"
     networks:
       - appnet
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 networks:
   appnet:
+
+volumes:
+  postgres_data:
