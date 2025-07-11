@@ -33,3 +33,7 @@ func NewUnprocessableContentError(message string) *Error {
 func NewInternalServerError() *Error {
 	return new("um erro inesperado aconteceu", http.StatusInternalServerError)
 }
+
+func NewUnauthorizedError(message string) *Error {
+	return new(message, http.StatusUnauthorized)
+}

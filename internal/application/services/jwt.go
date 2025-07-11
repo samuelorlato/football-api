@@ -5,6 +5,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/samuelorlato/football-api/internal/application/ports"
+	"github.com/samuelorlato/football-api/pkg/errs"
 )
 
 type JWTService struct{}
@@ -43,13 +44,8 @@ func (j *JWTService) ValidateToken(tokenString string, secret string) error {
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(t *jwt.Token) (interface{}, error) {
 		return []byte(secret), nil
 	})
-	if err != nil {
-		// TODO: create custom error
-		return err
-	}
-	if !token.Valid {
-		// TODO: create custom error
-		return nil
+	if err != nil || !token.Valid {
+		return errs.NewUnauthorizedError("token inválido ou expirado")
 	}
 
 	return nil
