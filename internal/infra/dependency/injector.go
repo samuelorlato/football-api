@@ -37,15 +37,17 @@ func Injector() *injector {
 	getMatchesUsecase := usecases.NewGetMatchesUsecase(footballAPI)
 	subscribeUsecase := usecases.NewSubscribeUsecase(fanRepository)
 	getFanByEmailUsecase := usecases.NewGetFanByEmailUsecase(fanRepository)
+	getUserByIDUsecase := usecases.NewGetUserByIDUsecase(userRepository)
 
 	authorizationController := controllers.NewAuthorizationController(registerUsecase, loginUsecase)
 	footballController := controllers.NewFootballController(getLeaguesUsecase, getMatchesUsecase)
 	broadcastController := controllers.NewBroadcastController(subscribeUsecase)
 	fanController := controllers.NewFanController(getFanByEmailUsecase)
+	userController := controllers.NewUserController(getUserByIDUsecase)
 
 	v10Validator := validators.NewV10Validator()
 
-	app := router.New(fanController, broadcastController, footballController, authorizationController, v10Validator).Route()
+	app := router.New(userController, fanController, broadcastController, footballController, authorizationController, v10Validator).Route()
 
 	return &injector{
 		App: app,

@@ -17,6 +17,21 @@ func NewGormUserRepository(db *gorm.DB) ports.UserRepository {
 	}
 }
 
+func (u *gormUserRepository) FindByID(ID string) (*entities.User, error) {
+	var userModel models.User
+	if err := u.db.Where("id = ?", ID).First(&userModel).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	user := userModel.ToEntity()
+
+	return &user, nil
+}
+
 func (u *gormUserRepository) FindByUsername(username string) (*entities.User, error) {
 	var userModel models.User
 	if err := u.db.Where("name = ?", username).First(&userModel).Error; err != nil {
